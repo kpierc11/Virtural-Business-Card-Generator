@@ -1,8 +1,8 @@
 export default function Header() {
   return (
-    <div className="height-[60px] bg-primary">
+    <div className="height-[60px] bg-primary p-5">
       <div className="flex">
-        <div></div>
+        <div className="mr-[auto]"></div>
         <div>
           <label className="swap swap-rotate">
             {/* this hidden checkbox controls the state */}
