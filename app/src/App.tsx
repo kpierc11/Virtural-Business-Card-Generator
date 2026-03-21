@@ -6,20 +6,41 @@ function App() {
     name: "",
     email: "",
     phone: "",
-    headingColor: "",
+    color: "",
     websiteLink: "",
+    companyName: "",
+    jobTitle: "",
   });
 
   const [previewImage, setPreviewImage] = useState("");
+  const [previewBackgroundImage, setPreviewBackgroundImage] = useState("");
+
+  const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      console.log("profile:", file);
+      const image = URL.createObjectURL(file);
+      setPreviewImage(image);
+    } else {
+      setPreviewImage("");
+    }
+  };
+
+  const handleBackgroundImageChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      console.log("background:", file);
+      const image = URL.createObjectURL(file);
+      setPreviewBackgroundImage(image);
+    } else {
+      setPreviewBackgroundImage("");
+    }
+  };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-
-    if (event.target.files) {
-      const testFile = event.target.files[0];
-      const image = URL.createObjectURL(testFile);
-      setPreviewImage(image);
-    }
 
     setFormData((prev) => ({
       ...prev,
@@ -88,9 +109,9 @@ function App() {
   return (
     <>
       <Header></Header>
-      <section className="w-[100%] mt-20">
-        <div className="flex flex-row flex-wrap gap-100 justify-center mr-2 ml-2">
-          <div className="card card-border bg-base-100 h-[100%] w-96 shadow-[0_35px_60px_-15px_rgba(0,0,0,0.2)]">
+      <section className="w-[100%] mt-20 mb-50">
+        <div className="flex flex-row flex-wrap gap-50 justify-center mr-2 ml-2">
+          <div className="card card-border bg-base-100 h-[100%] w-100 justify-center items-center shadow-[0_35px_60px_-15px_rgba(0,0,0,0.2)]">
             <div className="card-body">
               <h2 className="text-3xl font-bold mb-5">Virtual Card Settings</h2>
               <form className="flex flex-col gap-5" onSubmit={handleFormSubmit}>
@@ -196,6 +217,58 @@ function App() {
                   />
                 </label>
 
+                <label className="input validator">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="size-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 0 0 .75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 0 0-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0 1 12 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 0 1-.673-.38m0 0A2.18 2.18 0 0 1 3 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 0 1 3.413-.387m7.5 0V5.25A2.25 2.25 0 0 0 13.5 3h-3a2.25 2.25 0 0 0-2.25 2.25v.894m7.5 0a48.667 48.667 0 0 0-7.5 0M12 12.75h.008v.008H12v-.008Z"
+                    />
+                  </svg>
+
+                  <input
+                    type="text"
+                    name="companyName"
+                    placeholder="Company Name"
+                    required
+                    value={formData.companyName}
+                    onChange={handleChange}
+                  />
+                </label>
+
+                <label className="input validator">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="size-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 0 0 .75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 0 0-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0 1 12 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 0 1-.673-.38m0 0A2.18 2.18 0 0 1 3 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 0 1 3.413-.387m7.5 0V5.25A2.25 2.25 0 0 0 13.5 3h-3a2.25 2.25 0 0 0-2.25 2.25v.894m7.5 0a48.667 48.667 0 0 0-7.5 0M12 12.75h.008v.008H12v-.008Z"
+                    />
+                  </svg>
+
+                  <input
+                    type="text"
+                    name="jobTitle"
+                    placeholder="Job Title"
+                    required
+                    value={formData.jobTitle}
+                    onChange={handleChange}
+                  />
+                </label>
+
                 <fieldset className="fieldset">
                   <legend className="fieldset-legend">Profile Image</legend>
                   <input
@@ -203,7 +276,18 @@ function App() {
                     className="file-input"
                     name="profileImage"
                     //value={formData.profileImage}
-                    onChange={handleChange}
+                    onChange={handleProfileImageChange}
+                  />
+                  <label className="label">Max size 2MB</label>
+                </fieldset>
+                <fieldset className="fieldset">
+                  <legend className="fieldset-legend">Background Image</legend>
+                  <input
+                    type="file"
+                    className="file-input"
+                    name="backgroundImage"
+                    //value={formData.profileImage}
+                    onChange={handleBackgroundImageChange}
                   />
                   <label className="label">Max size 2MB</label>
                 </fieldset>
@@ -214,8 +298,8 @@ function App() {
                       className="cursor-pointer max-w-[30px] rounded-full"
                       type="color"
                       id="background"
-                      name="headingColor"
-                      value={formData.headingColor}
+                      name="color"
+                      value={formData.color}
                       onChange={handleChange}
                     />
                   </div>
@@ -231,14 +315,32 @@ function App() {
           </div>
 
           <div className="card card-border bg-base-100 w-96 h-[100%] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.2)] card-border">
-            <div
-              className="h-40 rounded-t-lg"
-              style={
-                formData.headingColor
-                  ? { backgroundColor: formData.headingColor }
-                  : { backgroundColor: "var(--color-secondary)" }
-              }
-            ></div>
+            {previewBackgroundImage ? (
+              <div className="h-40 rounded-t-lg relative">
+                <img
+                  className="h-40 w-100 cover"
+                  src={previewBackgroundImage}
+                ></img>
+                <div
+                  className="absolute w-[100%] h-40 top-0 opacity-95 rounded-t-lg"
+                  style={
+                    formData.color
+                      ? { backgroundColor: formData.color }
+                      : { backgroundColor: "var(--color-secondary)" }
+                  }
+                ></div>
+              </div>
+            ) : (
+              <div
+                className="h-40 rounded-t-lg"
+                style={
+                  formData.color
+                    ? { backgroundColor: formData.color }
+                    : { backgroundColor: "var(--color-secondary)" }
+                }
+              ></div>
+            )}
+
             <div className="card-body rounded-md">
               <div className="p-4">
                 <div className="flex items-center">
@@ -277,8 +379,16 @@ function App() {
                         </svg>
                       </div>
                       <div>
-                        <p>Software Developer</p>
-                        <p className="font-bold">{"Dpi Power"}</p>
+                        <p>
+                          {formData.jobTitle
+                            ? formData.jobTitle
+                            : "Software Developer"}
+                        </p>
+                        <p className="font-bold">
+                          {formData.companyName
+                            ? formData.companyName
+                            : "Dpi Power"}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -343,7 +453,7 @@ function App() {
                           viewBox="0 0 24 24"
                           strokeWidth={1.5}
                           stroke="white"
-                          className="size-6"
+                          className="size-5"
                         >
                           <path
                             strokeLinecap="round"
