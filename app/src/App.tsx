@@ -10,7 +10,6 @@ function App() {
   });
 
   const [previewImage, setPreviewImage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -201,9 +200,7 @@ function App() {
                       onChange={handleChange}
                     />
                   </label>
-                  <div className="validator-hint hidden">
-                    Enter valid Link
-                  </div>
+                  <div className="validator-hint hidden">Enter valid Link</div>
 
                   <fieldset className="fieldset">
                     <legend className="fieldset-legend">Profile Image</legend>
@@ -226,8 +223,6 @@ function App() {
                         name="headingColor"
                         value={formData.headingColor}
                         onChange={handleChange}
-                        colorspace="display"
-                        alpha
                       />
                     </div>
                   </div>
