@@ -4,7 +4,7 @@ import { useParams } from "react-router";
 export default function VirtualCard() {
   let { id } = useParams();
   console.log(id);
-  const [formData, setFormData] = useState({
+  const [formData] = useState({
     name: "",
     email: "",
     phone: "",
