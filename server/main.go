@@ -103,10 +103,11 @@ func addNewVirtualCard(c *gin.Context) {
 
 func main() {
 
-	err := godotenv.Load(".env")
-
-	if err != nil {
-		log.Print("No .env file found")
+	if os.Getenv("FLY_REGION") == "" {
+		err := godotenv.Load(".env")
+		if err != nil {
+			log.Println("No .env file found, continuing with existing environment variables")
+		}
 	}
 
 	dsn, exists := os.LookupEnv("DATABASE_URL")
@@ -114,7 +115,7 @@ func main() {
 		log.Fatalf("Couldn't find env variable")
 	}
 
-	db, err = sql.Open("postgres", dsn)
+	db, err := sql.Open("postgres", dsn)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -18,7 +18,7 @@ export default function VirtualCard() {
 
   const getCardData = async () => {
     try {
-      const response = await fetch("http://localhost:8080/get-card", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/get-card, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

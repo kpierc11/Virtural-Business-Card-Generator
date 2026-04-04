@@ -64,7 +64,7 @@ export default function Home() {
 
     setIsLoading(true);
     try {
-      await fetch("http://localhost:8080/add-card", {
+      await fetch(`${import.meta.env.VITE_API_URL}/add-card`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
