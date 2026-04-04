@@ -4,7 +4,7 @@ import { useParams } from "react-router";
 export default function VirtualCard() {
   let { id } = useParams();
   console.log(id);
-  const [formData] = useState({
+  const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
@@ -19,11 +19,11 @@ export default function VirtualCard() {
   const getCardData = async () => {
     try {
       const response = await fetch("http://localhost:8080/get-card", {
-        method: "GET",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body:JSON.stringify({id:id})
+        body:JSON.stringify({id})
       });
 
       if (!response.ok) {
@@ -33,12 +33,17 @@ export default function VirtualCard() {
       const cardData = await response.json();
 
       console.log(cardData);
-    } catch (error) {}
+      setFormData(cardData.data)
+    } catch (error) {
+      console.log(error);
+    }
+    finally {
+    }
   };
 
   useEffect(() => {
     getCardData();
-  });
+  }, []);
 
   function handleVcfDownload(event: any): void {
     event.preventDefault();
@@ -48,12 +53,12 @@ export default function VirtualCard() {
       "VERSION:3.0",
       `N:${formData.name};;;;`,
       `FN:${formData.name}`,
-      "ORG:Acme Inc.",
-      "TITLE:Frontend Developer",
+      `ORG:${formData.companyName}`,
+      `TITLE:${formData.jobTitle}`,
       `TEL;TYPE=CELL:${formData.phone}`,
       `EMAIL:${formData.email}`,
       "ADR;TYPE=HOME:;;123 Main St;Bristol;VA;24201;USA",
-      "URL:https://johndoe.dev",
+      `URL:${formData.websiteLink}`,
       "BDAY:19900101",
       "NOTE:Met at tech conference",
       "END:VCARD",

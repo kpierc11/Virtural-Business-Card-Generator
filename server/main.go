@@ -3,7 +3,6 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -30,28 +29,41 @@ type CardData struct {
 }
 
 func getVirtualCard(c *gin.Context) {
-	var id = c.PostForm("id")
-	var cardData CardData
-	var rawData []byte
 
-	fmt.Printf("ID: %v", id)
-
-	sqlStatement := `SELECT id, card_data FROM virtual_cards WHERE id=$1`
-	row := db.QueryRow(sqlStatement, id)
-
-	switch err := row.Scan(&id, &rawData); err {
-	case sql.ErrNoRows:
-		fmt.Println("No rows were returned!")
-	case nil:
-		if err := json.Unmarshal(rawData, &cardData); err != nil {
-			panic(err)
-		}
-
-		fmt.Println(id, cardData)
-		c.JSON(http.StatusOK, cardData)
-	default:
-		panic(err)
+	type Request struct {
+		ID string `json:"id"`
 	}
+
+	var req Request
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request body"})
+		return
+	}
+
+	sqlStatement := `SELECT id, card_data FROM virtual_cards WHERE id = $1`
+	var rawData []byte
+	var cardID string
+
+	row := db.QueryRow(sqlStatement, req.ID)
+	err := row.Scan(&cardID, &rawData)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(http.StatusNotFound, gin.H{"error": "card not found"})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "database error"})
+		return
+	}
+
+	var cardData CardData
+	if err := json.Unmarshal(rawData, &cardData); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to parse card data"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": cardData,
+	})
 }
 
 func addNewVirtualCard(c *gin.Context) {
@@ -108,7 +120,6 @@ func main() {
 	}
 	defer db.Close()
 
-	// Verify the connection is alive
 	if err := db.Ping(); err != nil {
 		log.Fatal(err)
 	}
@@ -124,11 +135,8 @@ func main() {
 
 	router.Use(cors.New(config))
 
-	// Define a simple GET endpoint
 	router.POST("/add-card", addNewVirtualCard)
-	router.GET("/get-card", getVirtualCard)
+	router.POST("/get-card", getVirtualCard)
 
-	// Start server on port 8080 (default)
-	// Server will listen on 0.0.0.0:8080 (localhost:8080 on Windows)
 	router.Run()
 }

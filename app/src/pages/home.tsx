@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
 
 export default function Home() {
@@ -60,6 +60,7 @@ export default function Home() {
       .join("");
 
     formData.id = uniqueID;
+    console.log(uniqueID);
 
     setIsLoading(true);
     try {
@@ -80,6 +81,34 @@ export default function Home() {
     }
   };
 
+  const handleDownloadQR = () => {
+    const svg = document.querySelector("#qr-code");
+    if (!svg) {
+      return;
+    }
+    const serializer = new XMLSerializer();
+    const source = serializer.serializeToString(svg);
+
+    const img = new Image();
+    img.src = "data:image/svg+xml;base64," + btoa(source);
+
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width || 300;
+      canvas.height = img.height || 300;
+      const ctx = canvas.getContext("2d");
+      ctx?.drawImage(img, 0, 0);
+
+      const jpegUrl = canvas.toDataURL("image/jpeg");
+      const link = document.createElement("a");
+      link.href = jpegUrl;
+      link.download = "qr-code.jpeg";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    };
+  };
+
   if (isLoading) {
     return (
       <>
@@ -91,11 +120,21 @@ export default function Home() {
     );
   }
 
-  if(showQRCode) {
+  if (showQRCode) {
     return (
       <>
         <div className="w-[100%] h-[400px] mt-40 flex flex-col justify-center items-center">
-          <QRCodeSVG width="300" height="300" value={`/virtual-card/${formData.id}`} />
+          <div className="card card-border bg-base-100 p-10">
+            <QRCodeSVG
+              id="qr-code"
+              width="300"
+              height="300"
+              value={`${import.meta.env.VITE_BASE_URL}/virtual-card/${formData.id}`}
+            />
+            <button className="btn btn-primary mt-10" onClick={handleDownloadQR}>
+              Download QR Code
+            </button>
+          </div>
         </div>
       </>
     );
