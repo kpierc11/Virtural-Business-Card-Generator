@@ -70,12 +70,7 @@ func addNewVirtualCard(c *gin.Context) {
 	var card CardData
 
 	if err := c.ShouldBindJSON(&card); err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-		return
-	}
-
-	if card.ID == "" {
-		c.JSON(http.StatusNotFound, gin.H{"error": "missing ID"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -85,13 +80,10 @@ func addNewVirtualCard(c *gin.Context) {
 		return
 	}
 
-	sqlStatement := `
-		INSERT INTO virtual_cards (id, card_data)
-		VALUES ($1, $2)
-	`
+	sqlStatement := `INSERT INTO virtual_cards (id, card_data) VALUES ($1, $2::jsonb)`
 
-	_, err = db.Exec(sqlStatement, card.ID, jsonData)
-	if err != nil {
+	_, dbError := db.Exec(sqlStatement, card.ID, jsonData)
+	if dbError != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "database error"})
 		return
 	}
@@ -115,7 +107,8 @@ func main() {
 		log.Fatalf("Couldn't find env variable")
 	}
 
-	db, err := sql.Open("postgres", dsn)
+	var err error
+	db, err = sql.Open("postgres", dsn)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -129,7 +122,7 @@ func main() {
 	router.SetTrustedProxies([]string{"localhost:5173"})
 
 	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"http://localhost:5173,https://superfreevirtualbusinesscards.netlify.app/"}
+	config.AllowOrigins = []string{"http://localhost:5173", "https://superfreevirtualbusinesscards.netlify.app"}
 	config.AllowCredentials = true
 	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
 	config.AllowHeaders = []string{"Origin", "Content-Type", "Authorization"}

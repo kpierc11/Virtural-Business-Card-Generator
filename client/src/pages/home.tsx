@@ -129,7 +129,7 @@ export default function Home() {
               id="qr-code"
               width="300"
               height="300"
-              value={`${import.meta.env.VITE_BASE_URL}/virtual-card/${formData.id}`}
+              value={`${import.meta.env.VITE_BASE_URL}virtual-card/${formData.id}`}
             />
             <button className="btn btn-primary mt-10" onClick={handleDownloadQR}>
               Download QR Code
