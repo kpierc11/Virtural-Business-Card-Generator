@@ -151,7 +151,7 @@ export default function Home() {
                 onSubmit={handleFormSubmit}
               >
                 {/* Name */}
-                <div className="card card-border card-body items-center gap-5 bg-base-100 w-[100%] max-w-[70%] pb-20 shadow-sm">
+                <div className="card card-border card-body items-center gap-5 bg-base-100 w-[100%] max-w-[800px] pb-20 shadow-sm">
                   <h2 className="text-3xl font-bold mb-5">
                     General Information
                   </h2>
@@ -321,7 +321,7 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="card card-border items-center bg-base-100 card-body flex gap-2 shadow-sm w-[100%] max-w-[70%] pb-20">
+                <div className="card card-border items-center bg-base-100 card-body flex gap-2 shadow-sm w-[100%] max-w-[800px] pb-20">
                   <h2 className="text-3xl font-bold mb-5">Images</h2>
                   <fieldset className="fieldset">
                     <legend className="fieldset-legend">Profile Image</legend>

@@ -30,7 +30,7 @@ export default function Header() {
         </div>
       </div>
       <div className="navbar-center">
-        <a className="btn btn-ghost text-xl">Virtual Business Card Generator</a>
+        <a className="btn btn-ghost text-xl">VBC Generator</a>
       </div>
       <div className="navbar-end">
         <button className="btn btn-ghost btn-circle">
