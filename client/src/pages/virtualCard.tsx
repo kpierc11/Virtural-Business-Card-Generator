@@ -3,7 +3,6 @@ import { useParams } from "react-router";
 
 export default function VirtualCard() {
   let { id } = useParams();
-  console.log(id);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -23,7 +22,7 @@ export default function VirtualCard() {
         headers: {
           "Content-Type": "application/json",
         },
-        body:JSON.stringify({id})
+        body: JSON.stringify({ id }),
       });
 
       if (!response.ok) {
@@ -32,12 +31,10 @@ export default function VirtualCard() {
 
       const cardData = await response.json();
 
-      console.log(cardData);
-      setFormData(cardData.data)
+      setFormData(cardData.data);
     } catch (error) {
       console.log(error);
-    }
-    finally {
+    } finally {
     }
   };
 
